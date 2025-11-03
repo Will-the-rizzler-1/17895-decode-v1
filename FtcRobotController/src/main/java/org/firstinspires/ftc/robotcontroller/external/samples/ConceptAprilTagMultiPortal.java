@@ -97,7 +97,6 @@ public class ConceptAprilTagMultiPortal extends LinearOpMode
             // can get back from the processor, you should look at ConceptAprilTag.
             telemetry.addData("Number of tags in Camera 1", aprilTagProcessor1.getDetections().size());
             telemetry.addData("Number of tags in Camera 2", aprilTagProcessor2.getDetections().size());
-            telemetry.update();
             sleep(20);
         }
     }

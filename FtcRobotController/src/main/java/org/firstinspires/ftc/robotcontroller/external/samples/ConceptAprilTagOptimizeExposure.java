@@ -99,7 +99,6 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
         // Wait for the match to begin.
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch START to start OpMode");
-        telemetry.update();
         waitForStart();
 
         while (opModeIsActive())
@@ -118,7 +117,6 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
 
             telemetry.addData("Exposure","%d  (%d - %d)", myExposure, minExposure, maxExposure);
             telemetry.addData("Gain","%d  (%d - %d)", myGain, minGain, maxGain);
-            telemetry.update();
 
             // check to see if we need to change exposure or gain.
             thisExpUp = gamepad1.left_bumper;

@@ -63,7 +63,6 @@ public class SensorAndyMarkTOF extends LinearOpMode {
         AndyMarkTOF sensorTimeOfFlight = (AndyMarkTOF) sensorDistance;
 
         telemetry.addData(">>", "Press start to continue");
-        telemetry.update();
 
         waitForStart();
         while(opModeIsActive()) {
@@ -77,8 +76,6 @@ public class SensorAndyMarkTOF extends LinearOpMode {
             // AndyMarkTOF specific methods.
             telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
             telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
-
-            telemetry.update();
         }
     }
 

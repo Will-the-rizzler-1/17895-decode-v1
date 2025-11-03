@@ -89,7 +89,6 @@ public class ConceptAprilTag extends LinearOpMode {
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch START to start OpMode");
-        telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
@@ -98,7 +97,6 @@ public class ConceptAprilTag extends LinearOpMode {
                 telemetryAprilTag();
 
                 // Push telemetry to the Driver Station.
-                telemetry.update();
 
                 // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {

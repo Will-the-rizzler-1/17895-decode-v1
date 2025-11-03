@@ -116,7 +116,6 @@ public class ConceptSoundsSKYSTONE extends LinearOpMode {
             telemetry.addData("", "");
             telemetry.addData("Sound >", sounds[soundIndex]);
             telemetry.addData("Status >", soundPlaying ? "Playing" : "Stopped");
-            telemetry.update();
         }
     }
 }

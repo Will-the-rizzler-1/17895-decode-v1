@@ -6,6 +6,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.ServoImpl;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.teleop.Component;
@@ -15,6 +19,8 @@ import org.firstinspires.ftc.teamcode.util.PIDController;
 @Config
 public class Whisk implements Component {
 
+    public ServoImplEx Flick;
+    public ElapsedTime FlickTimer;
 
     private final HardwareMap hardwareMap;
 
@@ -24,8 +30,12 @@ public class Whisk implements Component {
     }
 
     public static class Params {
-        public double WhiskKp = 0.0085;
-        public double WhiskKd = 0.0005;
+        public double FlickMax = 0.99;
+        public double FlickMin = 0.01;
+        public double FlickLow = 620;
+        public double FlickBallHeight = 1120;
+        public double WhiskKp = 0.06;
+        public double WhiskKd = 0.00051;
         public double WhiskKi = 0;
         public double WhiskKs = 67;
         public double COLLECT1 = 67;
@@ -56,8 +66,12 @@ public class Whisk implements Component {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         WhiskMotor = hardwareMap.get(DcMotorEx.class, "WhiskMotor");
+        Flick = hardwareMap.get(ServoImplEx.class, "Flick");
+        Flick.setPwmRange(new PwmControl.PwmRange(WHISK_PARAMS.FlickLow, WHISK_PARAMS.FlickBallHeight));
         WhiskMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         WhiskMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FlickTimer = new ElapsedTime();
+        FlickTimer.reset();
 
         whiskState = WhiskState.COLLECT1;
         whiskPos = 0;
@@ -96,6 +110,9 @@ public class Whisk implements Component {
 
     public void update() {
         setMotorPower(-WhiskController.update(WhiskMotor.getCurrentPosition()));
+        if(FlickTimer.seconds()>0.5){
+            RestFlick();
+        }
     }
 
     public double getWhiskTelemetry() {
@@ -106,6 +123,7 @@ public class Whisk implements Component {
         telemetry.addData("WhiskMotor Power", WhiskMotor.getPower());
         telemetry.addData("Whisk State", whiskState);
         telemetry.addData("Whisk Encoders", WhiskMotor.getCurrentPosition());
+        telemetry.addData("Flick Position", Flick.getPosition());
         return WHISK_PARAMS.WhiskKs;
     }
 
@@ -118,6 +136,14 @@ public class Whisk implements Component {
         whiskPos = (whiskPos + 1 + 6) % 6;
         targetEncoder -= WHISK_PARAMS.encodersPerRev/6;
         WhiskController.setTarget(targetEncoder);
+    }
+
+    public void LiftFlick() {
+        Flick.setPosition(0.99);
+        FlickTimer.reset();
+    }
+    public void RestFlick() {
+        Flick.setPosition(0.01);
     }
     public int getWhiskPos() {
         return whiskPos;

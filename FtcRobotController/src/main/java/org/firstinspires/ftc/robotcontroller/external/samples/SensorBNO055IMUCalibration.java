@@ -139,7 +139,6 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
 
         // Wait until we're told to go
         while (!isStarted()) {
-            telemetry.update();
             idle();
         }
 
@@ -164,12 +163,9 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
 
                 // Wait for the button to be released
                 while (gamepad1.a) {
-                    telemetry.update();
                     idle();
                 }
             }
-
-            telemetry.update();
         }
     }
 

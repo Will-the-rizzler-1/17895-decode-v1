@@ -146,7 +146,6 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch START to start OpMode");
-        telemetry.update();
         waitForStart();
 
         while (opModeIsActive())

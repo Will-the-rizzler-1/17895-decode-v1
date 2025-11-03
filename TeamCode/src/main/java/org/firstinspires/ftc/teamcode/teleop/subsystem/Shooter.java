@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrain.PIDDrivetrain;
@@ -15,6 +17,7 @@ public class Shooter implements Component {
 
     Telemetry telemetry;
     HardwareMap map;
+    public ServoImplEx hood;
 
 
     public enum ShooterState{
@@ -30,6 +33,8 @@ public class Shooter implements Component {
 
     public static class Params{
         public double SHOOTER_POWER = 0.99;
+        public double HOODCLOSE = 2520;
+        public double HOODFAR = 700;
     }
     public static Params SHOOTER_PARAMS = new Shooter.Params();
 
@@ -39,6 +44,8 @@ public class Shooter implements Component {
         this.telemetry = telemetry;
         shooterMotorL = map.get(DcMotor.class, "shooterL");
         shooterMotorR = map.get(DcMotor.class, "shooterR");
+        hood = map.get(ServoImplEx.class, "hood");
+        hood.setPwmRange(new PwmControl.PwmRange(SHOOTER_PARAMS.HOODCLOSE, SHOOTER_PARAMS.HOODFAR));
         shooterState = Shooter.ShooterState.OFF;
     }
 
@@ -107,6 +114,13 @@ public class Shooter implements Component {
         shooterMotorR.setPower(0.80);
     }
 
+    public void HoodFarPos() {
+        hood.setPosition(0.99);
+    }
+
+    public void HoodClosePos() {
+        hood.setPosition(0.01);
+    }
     public void setShoot() {
         shooterState = Shooter.ShooterState.SHOOTBASE;
     }

@@ -135,7 +135,6 @@ public class RobotAutoDriveToLine_Linear extends LinearOpMode {
     double getBrightness() {
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
         telemetry.addData("Light Level (0 to 1)",  "%4.2f", colors.alpha);
-        telemetry.update();
 
         return colors.alpha;
     }

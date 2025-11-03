@@ -96,7 +96,6 @@ public class SensorOctoQuadAdv extends LinearOpMode {
         // Display the OctoQuad firmware revision
         telemetry.addLine("OctoQuad Firmware v" + octoquad.getFirmwareVersion());
         telemetry.addLine("\nPress START to read encoder values");
-        telemetry.update();
 
         waitForStart();
 
@@ -124,7 +123,6 @@ public class SensorOctoQuadAdv extends LinearOpMode {
             elapsedTime.reset();
 
             telemetry.addData("Loop time", "%.1f mS", avgTime.getMean()/1000000);
-            telemetry.update();
         }
     }
 }

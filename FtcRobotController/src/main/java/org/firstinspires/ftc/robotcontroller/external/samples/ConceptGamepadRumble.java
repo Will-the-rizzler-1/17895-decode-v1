@@ -114,7 +114,6 @@ public class ConceptGamepadRumble extends LinearOpMode
                 .build();
 
         telemetry.addData(">", "Press Start");
-        telemetry.update();
 
         waitForStart();
         runtime.reset();    // Start game timer.
@@ -193,7 +192,6 @@ public class ConceptGamepadRumble extends LinearOpMode
             }
 
             // Send the telemetry data to the Driver Station, and then pause to pace the program.
-            telemetry.update();
             sleep(10);
         }
     }
