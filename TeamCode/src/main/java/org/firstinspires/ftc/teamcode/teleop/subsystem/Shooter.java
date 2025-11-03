@@ -69,7 +69,6 @@ public class Shooter implements Component {
 
         telemetry.addData("shooterPowerR", getShooterPowerR());
         telemetry.addData("shooterPowerL", getShooterPowerL());
-        telemetry.update();
     }
     public void setShooterPower(double power){
         shooterMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

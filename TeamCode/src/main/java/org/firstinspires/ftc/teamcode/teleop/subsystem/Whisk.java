@@ -1,80 +1,130 @@
-//package org.firstinspires.ftc.teamcode.teleop.subsystem;
-//
-//import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-//
-//import com.qualcomm.robotcore.hardware.DcMotor;
-//import com.qualcomm.robotcore.hardware.DcMotorEx;
-//import com.qualcomm.robotcore.hardware.HardwareMap;
-//
-//import org.firstinspires.ftc.robotcore.external.Telemetry;
-//import org.firstinspires.ftc.teamcode.teleop.Component;
-//import org.firstinspires.ftc.teamcode.util.PIDController;
-//
-//public class Whisk implements Component {
-//    public Whisk() {
-//
-//    }
-//
-//    @Override
-//    public void reset() {
-//
-//    }
-//
-//    @Override
-//    public void update() {
-//
-//    }
-//
-//    @Override
-//    public String test() {
-//        return "";
-//    }
-//
-//    public static class Params {
-//
-//
-//        public double WhiskKp = 67;
-//        public double WhiskKi = 67;
-//        public double WhishKd = 67;
-//        public double WhiskKs = 67;
-//        public double COLLECT1 = 67;
-//        public double COLLECT2 = 67;
-//        public double COLLECT3 = 67;
-//        public double SHOOT1 = 67;
-//        public double SHOOT2 = 67;
-//        public double SHOOT3 = 67;
-//    }
-//    public static Whisk.Params SHOOTER_PARAMS = new Params();
-//
-//
-//        Telemetry telemetry;
-//        HardwareMap map;
-//        PIDController WhiskController;
-//        public DcMotorEx WhiskMotor;
-//    public Whisk(HardwareMap hardwareMap, Telemetry telemetry) {
-//        WhiskController = new PIDController(PARAMS.liftKp, PARAMS.liftKi, PARAMS.liftKd, telemetry);
-//        WhiskController.setInputBounds(0, 1500);
-//        WhiskController.setOutputBounds(-0.1, 0.99);
-//
-//
-//    }
-//
-//
-//    public enum WhiskState{
-//        COLLECT1,
-//        COLLECT2,
-//        COLLECT3,
-//        SHOOT1,
-//        SHOOT2,
-//        SHOOT3,
-//    }
-//    public void setMotorPower(double power) {
-//        WhiskMotor.setPower(power);
-//    }
-//    @Override
-//    public void reset() {
-//        WhiskMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        WhiskMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//    }
-//}
-//
+package org.firstinspires.ftc.teamcode.teleop.subsystem;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
+import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Component;
+import org.firstinspires.ftc.teamcode.util.PIDController;
+
+
+@Config
+public class Whisk implements Component {
+
+
+    private final HardwareMap hardwareMap;
+
+    @Override
+    public String test() {
+        return "";
+    }
+
+    public static class Params {
+        public double WhiskKp = 0.0085;
+        public double WhiskKd = 0.0005;
+        public double WhiskKi = 0;
+        public double WhiskKs = 67;
+        public double COLLECT1 = 67;
+        public double COLLECT2 = 67;
+        public double COLLECT3 = 67;
+        public double SHOOT1 = 67;
+        public double SHOOT2 = 67;
+        public double SHOOT3 = 67;
+        public double MAX_POWER_COUNTER_CLOCKWISE = -0.25;
+        public double MAX_POWER_CLOCKWISE = 0.25;
+        public double encodersPerRev = 145;
+    }
+    private int whiskPos;
+    private double targetEncoder;
+    public static Params WHISK_PARAMS = new Params();
+
+
+        Telemetry telemetry;
+        HardwareMap map;
+        PIDController WhiskController;
+        public DcMotorEx WhiskMotor;
+
+
+    public Whisk(HardwareMap hardwareMap, Telemetry telemetry) {
+        WhiskController = new PIDController(WHISK_PARAMS.WhiskKp, WHISK_PARAMS.WhiskKi, WHISK_PARAMS.WhiskKd, telemetry);
+        WhiskController.setInputBounds(0, 1500);
+        WhiskController.setOutputBounds(-0.1, 0.1);
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
+        WhiskMotor = hardwareMap.get(DcMotorEx.class, "WhiskMotor");
+        WhiskMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        WhiskMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        whiskState = WhiskState.COLLECT1;
+        whiskPos = 0;
+        targetEncoder = 0;
+
+
+    }
+
+
+    public enum WhiskState {
+        COLLECT1,
+        COLLECT2,
+        COLLECT3,
+        SHOOT1,
+        SHOOT2,
+        SHOOT3,
+    }
+    private WhiskState whiskState;
+    public void setMotorPower(double power) {
+        WhiskMotor.setPower(power);
+    }
+    @Override
+    public void reset() {
+        WhiskMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        WhiskMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    private void setTarget(double target){
+        Whisk whiskController = null;
+        whiskController.setTarget(target);}
+
+    private void WhiskStartPos(){
+        setTarget(0);
+        setMotorPower(WHISK_PARAMS.MAX_POWER_CLOCKWISE);
+    }
+
+    public void update() {
+        setMotorPower(-WhiskController.update(WhiskMotor.getCurrentPosition()));
+    }
+
+    public double getWhiskTelemetry() {
+        double pidPower = -WhiskController.update(WhiskMotor.getCurrentPosition());
+
+        telemetry.addData("WhiskController Target", WhiskController.getTarget());
+        telemetry.addData("WhiskMotor Position", WhiskMotor.getTargetPosition());
+        telemetry.addData("WhiskMotor Power", WhiskMotor.getPower());
+        telemetry.addData("Whisk State", whiskState);
+        telemetry.addData("Whisk Encoders", WhiskMotor.getCurrentPosition());
+        return WHISK_PARAMS.WhiskKs;
+    }
+
+    public void incWhiskPos() {
+        whiskPos = (whiskPos + 1) % 6;
+        targetEncoder += WHISK_PARAMS.encodersPerRev/6;
+        WhiskController.setTarget(targetEncoder);
+    }
+    public void decWhiskPos() {
+        whiskPos = (whiskPos + 1 + 6) % 6;
+        targetEncoder -= WHISK_PARAMS.encodersPerRev/6;
+        WhiskController.setTarget(targetEncoder);
+    }
+    public int getWhiskPos() {
+        return whiskPos;
+    }
+
+
+
+
+}
+

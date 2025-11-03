@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrain.BasicDrive;
 import org.firstinspires.ftc.teamcode.teleop.subsystem.Collector;
 import org.firstinspires.ftc.teamcode.teleop.subsystem.Shooter;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Whisk;
 //import org.firstinspires.ftc.teamcode.teleop.subsystem.Whisk;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class BrainSTEMRobot {
     HardwareMap map;
     public Collector collector;
     public Shooter shooter;
-//    public Whisk whisk;
+    public Whisk whisk;
 
     public BasicDrive drive;
 
@@ -32,9 +33,11 @@ public class BrainSTEMRobot {
         collector = new Collector(map, telemetry);
         drive = new BasicDrive(map, telemetry);
         shooter = new Shooter(map, telemetry);
+        whisk = new Whisk(map, telemetry);
         subsystem.add(collector);
         subsystem.add(drive);
         subsystem.add(shooter);
+        subsystem.add(whisk);
     }
 
     public BrainSTEMRobot(Telemetry telemetry, HardwareMap hardwareMap, Gamepad gamepad1, Telemetry telemetry1) {

@@ -25,8 +25,9 @@ public class TeleOp extends LinearOpMode {
             updateDrive(robot);
             updateDriver1(robot);
             gp1.update();
-
+            robot.whisk.getWhiskTelemetry();
             telemetry.update();
+
         }
     }
 
@@ -45,6 +46,10 @@ public class TeleOp extends LinearOpMode {
     }
 
     private void driver1CollectorControls(BrainSTEMRobot robot) {
+        if(gp1.isFirstDpadLeft()) // rotates 60 counter clockwise
+            robot.whisk.incWhiskPos();
+        else if(gp1.isFirstDpadRight())
+            robot.whisk.decWhiskPos();
 
         if (gamepad1.left_bumper) {
             robot.collector.setOut();
