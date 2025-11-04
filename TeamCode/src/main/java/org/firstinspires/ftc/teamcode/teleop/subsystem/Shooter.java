@@ -34,7 +34,7 @@ public class Shooter implements Component {
     public static class Params{
         public double SHOOTER_POWER = 0.99;
         public double HOODCLOSE = 1500;
-        public double HOODFAR = 1000;
+        public double HOODFAR = 1001;
     }
     public static Params SHOOTER_PARAMS = new Shooter.Params();
 
